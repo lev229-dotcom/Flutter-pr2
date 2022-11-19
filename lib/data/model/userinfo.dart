@@ -7,11 +7,12 @@ import '../../domain/entity/userinfo_entity.dart';
 
 class UserInfo extends UserInfoEntity {
   late int id;
-  final String surname;
-  final String name;
-  final String patronymic;
-  final String date_of_birth;
+  String surname;
+  String name;
+  String patronymic;
+  String date_of_birth;
   UserInfo({
+    this.id = 0,
     required this.surname,
     required this.name,
     required this.patronymic,

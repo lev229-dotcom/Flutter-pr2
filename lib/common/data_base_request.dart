@@ -43,7 +43,7 @@ abstract class DataBaseRequest {
 
   /// Запрос для создания таблицы Users
   static const String _createTableUsers =
-      'CREATE TABLE "$tableUsers" ("id" INTEGER,"login" TEXT NOT NULL UNIQUE,"password" TEXT NOT NULL,"id_role" INTEGER,FOREIGN KEY("id_role") REFERENCES "Role"("id") on delete cascade,PRIMARY KEY("id"))';
+      'CREATE TABLE "$tableUsers" ("id" INTEGER, "userinfo_id" INTEGER, "login" TEXT NOT NULL UNIQUE,"password" TEXT NOT NULL,"id_role" INTEGER,FOREIGN KEY("id_role") REFERENCES "Role"("id") on delete cascade,PRIMARY KEY("id"))';
 
   static const String _createTableBody =
       'CREATE TABLE "$tableBody" ("id" INTEGER,"body_name" TEXT NOT NULL UNIQUE,"number_of_doors" TEXT NOT NULL,PRIMARY KEY("id"))';
@@ -60,7 +60,7 @@ abstract class DataBaseRequest {
       'CREATE TABLE "$tableFavorite" ("id" INTEGER, INTEGER,"id_user" INTEGER,"id_car" INTEGER,FOREIGN KEY("id_car") REFERENCES "Car"("id") on delete cascade,FOREIGN KEY("id_user") REFERENCES "Users"("id") on delete cascade,PRIMARY KEY("id"))';
 
   static const String _createTableUserInfo =
-      'CREATE TABLE "$tableUserInfo" ("id" INTEGER,"surname" TEXT NOT NULL ,"name" TEXT NOT NULL ,"patronymic" TEXT NULL ,"date_of_birth" TEXT NOT NULL,FOREIGN KEY("id") REFERENCES "Users"("id") on delete cascade,PRIMARY KEY ("id"))';
+      'CREATE TABLE "$tableUserInfo" ("id" INTEGER,"surname" TEXT NOT NULL ,"name" TEXT NOT NULL ,"patronymic" TEXT NULL ,"date_of_birth" TEXT NOT NULL,FOREIGN KEY("id") REFERENCES "Users"("userinfo_id") on delete cascade,PRIMARY KEY ("id"))'; //REFERENCES "Users"("userinfo_id")
 
   static const String _createTableCar =
       'CREATE TABLE "$tableCar" ("id" INTEGER NOT NULL UNIQUE,"engine_number" TEXT NOT NULL UNIQUE,"release_date_of_car" TEXT NOT NULL ,"price" INTEGER NOT NULL ,"id_car_body" INTEGER,"id_owner" INTEGER,"id_transmission" INTEGER,"id_color" INTEGER,FOREIGN KEY("id_car_body") REFERENCES "Body"("id") on delete cascade,FOREIGN KEY("id_owner") REFERENCES "Owner"("id") on delete cascade,FOREIGN KEY("id_color") REFERENCES "Color"("id") on delete cascade,FOREIGN KEY("id_transmission") REFERENCES "Transmission"("id") on delete cascade,PRIMARY KEY("id"))';

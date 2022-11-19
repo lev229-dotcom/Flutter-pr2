@@ -20,73 +20,49 @@ class DataBaseHelper {
     _appDocumentDirectory =
         await path_provider.getApplicationDocumentsDirectory();
     _pathDB = join(_appDocumentDirectory.path, 'carshop.db');
-    
 
     if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
-
-    sqfliteFfiInit();
-       var db = await databaseFactoryFfi.openDatabase(_pathDB, options: OpenDatabaseOptions(
-        version: _version,
-        onUpgrade: (db,oldVersion,newVersion)=> onUpdateTable(db),
-        
-        onCreate: (db, version) async {
-        await onCreateTable(db);
-      }
-        
-        ));
-       
-    } 
-    else {
-      database = await openDatabase(_pathDB, version: _version,
-      
-      onUpgrade:(db,oldVersion,newVersion)=> onUpdateTable(db),
-    
+      sqfliteFfiInit();
+      database = await databaseFactoryFfi.openDatabase(_pathDB,
+          options: OpenDatabaseOptions(
+              version: _version,
+              onUpgrade: (db, oldVersion, newVersion) => onUpdateTable(db),
+              onCreate: (db, version) async {
+                await onCreateTable(db);
+              }));
+    } else {
+      database = await openDatabase(_pathDB,
+          version: _version,
+          onUpgrade: (db, oldVersion, newVersion) => onUpdateTable(db),
           onCreate: (db, version) async {
-        await onCreateTable(db);
-      });
+            await onCreateTable(db);
+          });
     }
-    
   }
 
   Future<void> onCreateTable(Database db) async {
-
-    for (var i=0; i< DataBaseRequest.tableList.length;i++)
-    {
+    for (var i = 0; i < DataBaseRequest.tableList.length; i++) {
       await db.execute(DataBaseRequest.tableCreateList[i]);
     }
-    await onInitTable(db); 
-     }
-
-  Future<void> onInitTable (Database db) async{
-    try
-    {
-      db.insert(DataBaseRequest.tableRole, Role(role:'Администратор').toMap());
-      db.insert(DataBaseRequest.tableRole, Role(role:'Пользователь').toMap());
-      
-
-    }
-     on DatabaseException catch(e)
-    {
-
-    }
+    await onInitTable(db);
   }
-  
-Future<void>  onUpdateTable(Database db)async {
 
-var tables=await db.rawQuery('Select name FROM sqlite_master');
-for (var table in DataBaseRequest.tableList)
-{
-  if (tables.contains(table))
-  {
-    await db.execute(DataBaseRequest.deleteTable(table));
+  Future<void> onInitTable(Database db) async {
+    try {
+      db.insert(DataBaseRequest.tableRole, Role(role: 'Администратор').toMap());
+      db.insert(DataBaseRequest.tableRole, Role(role: 'Пользователь').toMap());
+    } on DatabaseException catch (e) {}
   }
-}
-for (var i=0; i< DataBaseRequest.tableList.length;i++)
-    {
+
+  Future<void> onUpdateTable(Database db) async {
+    var tables = await db.rawQuery('Select name FROM sqlite_master');
+    for (var table in DataBaseRequest.tableList) {
+      if (tables.contains(table)) {
+        await db.execute(DataBaseRequest.deleteTable(table));
+      }
+    }
+    for (var i = 0; i < DataBaseRequest.tableList.length; i++) {
       await db.execute(DataBaseRequest.tableCreateList[i]);
     }
-}
-
-
-
+  }
 }
