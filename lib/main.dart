@@ -51,17 +51,17 @@ class _Login extends State<Login> {
               controller: _loginController,
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Логин не должен быть пустым';
+                  return 'Почта не должна быть пустым';
                 }
                 if (value.length < 5) {
-                  return 'Логин должен быть не менее 5 символов';
+                  return 'Почта должна быть не менее 5 символов';
                 }
                 if (value.contains(RegExp(r"[а-яА-Я]"), 0)) {
                   return 'Только английские символы ';
                 }
               },
               decoration: const InputDecoration(
-                hintText: 'Вход в аккаунт',
+                hintText: 'Email',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -94,20 +94,23 @@ class _Login extends State<Login> {
                   } else {}
                 },
                 child: const Text(
-                  "Вход в аккаунт",
+                  "Вход",
                   style: TextStyle(fontSize: 20),
                 ),
               ),
             ),
-            SizedBox(
-              height: 35,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, reg);
-                },
-                child: const Text(
-                  'Регистрация',
-                  style: TextStyle(fontSize: 20),
+            Container(
+              margin: const EdgeInsets.only(top: 10.0),
+              child: SizedBox(
+                height: 35,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, reg);
+                  },
+                  child: const Text(
+                    'Регистрация',
+                    style: TextStyle(fontSize: 20),
+                  ),
                 ),
               ),
             ),
@@ -202,7 +205,6 @@ class _Registration extends State<Registration> {
                   ),
                 ),
 
-                //Пароль
                 TextFormField(
                   maxLength: 30,
                   controller: _passwordController,
@@ -311,20 +313,15 @@ class _Registration extends State<Registration> {
                         context: context,
                         initialDate: DateTime.now(),
                         firstDate: DateTime(1950),
-                        //DateTime.now() - not to allow to choose before today.
                         lastDate: DateTime(2100));
 
                     if (pickedDate != null) {
-                      print(
-                          pickedDate); //pickedDate output format => 2021-03-10 00:00:00.000
+                      print(pickedDate);
                       String formattedDate =
                           DateFormat('yyyy-MM-dd').format(pickedDate);
-                      print(
-                          formattedDate); //formatted date output using intl package =>  2021-03-16
+                      print(formattedDate);
 
-                      _dateofbirthController.text =
-                          formattedDate; //set output date to TextField value.
-
+                      _dateofbirthController.text = formattedDate;
                     } else {}
                   },
                 ),
