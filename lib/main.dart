@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app_router.dart';
 import 'package:flutter_application_1/data/repositories/auth_repository_impl.dart';
+import 'package:flutter_application_1/domain/cubit/role_auth_cubit.dart';
 import 'package:flutter_application_1/domain/entity/role_entity.dart';
 import 'package:flutter_application_1/domain/usercases/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 import 'core/db/data_base_helper.dart';
@@ -19,10 +21,22 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateRoute: router.generateRouter,
-      initialRoute: log,
+    return MultiBlocProvider(
+      providers: [BlocProvider(create: (context) => RoleAuthCubit())],
+      child: BlocBuilder<RoleAuthCubit, RoleAuthState>(
+        builder: (context, state) {
+          return MaterialApp(
+              title: "Pr4Dop",
+              onGenerateRoute: router.generateRouter,
+              initialRoute: log,
+              theme: context.read<RoleAuthCubit>().themeData);
+        },
+      ),
     );
+    // return MaterialApp(
+    //   onGenerateRoute: router.generateRouter,
+    //   initialRoute: log,
+    // );
   }
 }
 
@@ -390,14 +404,30 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
-        Text('Это видит только админ'),
-        ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, log);
-            },
-            child: Text('Обратно'))
-      ]),
+      body: BlocBuilder<RoleAuthCubit, RoleAuthState>(
+        builder: (context, state) {
+          if (state is RoleAuthState) {
+            context.read<RoleAuthCubit>().changeTheme(1);
+          }
+          return Column(children: [
+            Text('Экран админа'),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, log);
+                },
+                child: Text('Обратно')),
+          ]);
+        },
+      ),
+
+      // body: Column(children: [
+      //   Text('Это видит только админ'),
+      //   ElevatedButton(
+      //       onPressed: () {
+      //         Navigator.pushNamed(context, log);
+      //       },
+      //       child: Text('Обратно'))
+      // ]),
     );
   }
 }
@@ -408,14 +438,30 @@ class UserPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: [
-        Text('Это видит простой юзер'),
-        ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, log);
-            },
-            child: Text('Обратно')),
-      ]),
+      body: BlocBuilder<RoleAuthCubit, RoleAuthState>(
+        builder: (context, state) {
+          if (state is RoleAuthState) {
+            context.read<RoleAuthCubit>().changeTheme(2);
+          }
+          return Column(children: [
+            Text('Это видит простой юзер'),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, log);
+                },
+                child: Text('Обратно')),
+          ]);
+        },
+      ),
+
+      // body: Column(children: [
+      //   Text('Это видит простой юзер'),
+      //   ElevatedButton(
+      //       onPressed: () {
+      //         Navigator.pushNamed(context, log);
+      //       },
+      //       child: Text('Обратно')),
+      // ]),
     );
   }
 }
